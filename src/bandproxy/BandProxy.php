@@ -52,6 +52,7 @@ namespace {
 
 namespace bandproxy {
 
+    use bandproxy\source\ResourceMaker;
     use bandproxy\utils\MainLogger;
     use raklib\RakLib;
     use bandproxy\utils\Terminal;
@@ -183,5 +184,13 @@ namespace bandproxy {
                 }
         }
     }
+
+    foreach(ThreadManager::getInstance()->getAll() as $id => $thread){
+        $logger->debug("Stopping " . (new \ReflectionClass($thread))->getShortName() . " thread");
+        $thread->quit();
+    }
+
+    //$logger->shutdown();
+    //$logger->join();
 
 }

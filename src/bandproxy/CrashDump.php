@@ -31,13 +31,13 @@ class CrashDump{
             throw new \RuntimeException("Could not create Crash Dump");
         }
         $this->data["time"] = $this->time;
-        $this->addLine("BandProxy" . " Crash Dump " . date("D M j H:i:s T Y", $this->time));
+        /*$this->addLine("BandProxy" . " Crash Dump " . date("D M j H:i:s T Y", $this->time));
         $this->addLine();
         $this->baseCrash();
         $this->generalData();
         $this->pluginsData();
         $this->extraData();
-        $this->encodeData();
+        $this->encodeData();*/
     }
     public function getPath(){
         return $this->path;

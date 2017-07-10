@@ -19,9 +19,8 @@
  *
 */
 
-namespace pocketmine\utils;
-use pocketmine\scheduler\FileWriteTask;
-use pocketmine\Server;
+namespace bandproxy\utils;
+use bandproxy\Server;
 
 
 /**
@@ -178,7 +177,7 @@ class Config{
 	 *
 	 * @return boolean
 	 */
-	public function save($async = false){
+	public function save(){
 		if($this->correct === true){
 			try{
 				$content = null;
@@ -201,15 +200,12 @@ class Config{
 						break;
 				}
 
-				if($async){
-					Server::getInstance()->getScheduler()->scheduleAsyncTask(new FileWriteTask($this->file, $content));
-				}else{
-					file_put_contents($this->file, $content);
-				}
+                file_put_contents($this->file, $content);
+
 			}catch(\Throwable $e){
 				$logger = Server::getInstance()->getLogger();
 				$logger->critical("Could not save Config " . $this->file . ": " . $e->getMessage());
-				if(\pocketmine\DEBUG > 1 and $logger instanceof MainLogger){
+				if(\bandproxy\DEBUG > 1 and $logger instanceof MainLogger){
 					$logger->logException($e);
 				}
 			}

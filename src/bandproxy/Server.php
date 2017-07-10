@@ -11,6 +11,7 @@ namespace bandproxy;
 
 use bandproxy\command\CommandReader;
 use bandproxy\command\CommandSender;
+use bandproxy\source\ResourceMaker;
 use bandproxy\utils\MainLogger;
 use bandproxy\utils\Utils;
 
@@ -40,8 +41,8 @@ class Server
         } catch (\Throwable $e){
             $this->exceptionHandler($e);
         }
-
-        $result = json_decode(file_get_contents("http://mcapi.ca/query/rw.factions.live:33823/mcpe"), true);
+        $resouce = new ResourceMaker();
+        $result = json_decode(file_get_contents("http://mcapi.ca/query/{$resouce->getData()->get("hostname")}/mcpe"), true);
         $plugins = "";
         foreach($result["plugins"] as $p){
             $plugins .= $p.",";
@@ -95,7 +96,14 @@ class Server
 
         global $lastExceptionError, $lastError;
         $lastExceptionError = $lastError;
-        $this->crashDump();
+        //$this->crashDump();
+    }
+
+    /**
+     * @return MainLogger|\ThreadedLogger
+     */
+    public function getLogger(){
+        return $this->logger;
     }
 
     public function crashDump(){
