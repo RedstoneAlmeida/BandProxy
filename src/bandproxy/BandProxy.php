@@ -55,8 +55,9 @@ namespace bandproxy {
     use bandproxy\utils\MainLogger;
     use raklib\RakLib;
     use bandproxy\utils\Terminal;
+    use bandproxy\utils\Utils;
 
-    const Version = "0.1-beta";
+    const VERSION = "0.1-beta";
 
     if(!extension_loaded("phar")){
         echo "[CRITICAL] Unable to find the Phar extension." . PHP_EOL;
@@ -130,7 +131,7 @@ namespace bandproxy {
     $logger = new MainLogger(\bandproxy\DATA . "server.log", \bandproxy\ANSI);
 
     echo Terminal::$FORMAT_RESET . PHP_EOL;
-    new Server($logger);
+    new Server($logger, \Phar::running(true) . "/");
 
     ThreadManager::init();
 
@@ -165,6 +166,22 @@ namespace bandproxy {
             $messages[] = "#$j " . (isset($trace[$i]["file"]) ? cleanPath($trace[$i]["file"]) : "") . "(" . (isset($trace[$i]["line"]) ? $trace[$i]["line"] : "") . "): " . (isset($trace[$i]["class"]) ? $trace[$i]["class"] . (($trace[$i]["type"] === "dynamic" or $trace[$i]["type"] === "->") ? "->" : "::") : "") . $trace[$i]["function"] . "(" . Utils::printable(substr($params, 0, -2)) . ")";
         }
         return $messages;
+    }
+
+    function kill($pid){
+        switch(Utils::getOS()){
+            case "win":
+                exec("taskkill.exe /F /PID " . ((int) $pid) . " > NUL");
+                break;
+            case "mac":
+            case "linux":
+            default:
+                if(function_exists("posix_kill")){
+                    posix_kill($pid, SIGKILL);
+                }else{
+                    exec("kill -9 " . ((int)$pid) . " > /dev/null 2>&1");
+                }
+        }
     }
 
 }
