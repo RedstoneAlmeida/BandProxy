@@ -1,2 +1,2 @@
 # BandProxy
-Proxy connection style Nemisys/SynapseAPI
+Pocketmine | Proxy connection style Nemisys/SynapseAPI
